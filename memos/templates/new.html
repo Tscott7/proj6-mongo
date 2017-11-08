@@ -20,47 +20,41 @@
    <!-- Our own style sheet -->
    <link rel="stylesheet" href="/static/css/memos.css" />
 
+<script>
+function validateForm() {
+    var x = document.forms["myForm"]["date"].value;
+    var y = document.forms["myForm"]["description"].value;
+    if (x == "") {
+        alert("Date must be filled out");
+        return false;
+    }
+    if (y == "") {
+        alert("Description must be filled out")
+        return false;
+    }
+    console.log("x = " + x)
+    console.log("y = " + y)
+}
+</script>
+
 
 </head>
 <body>
 <div class="container">
 
 <!-- Flashed messages before content -->
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
 
-<h1>Memos</h1>
+<h1>New Memo</h1>
 
-{% if g.memos %}
-    {% for memo in g.memos %}
-  <div class="memo">
-  <div class="row">
-  <div class="col-md-2">
-    {{ memo.date | humanize }}
-  </div>
-  <div class="col-md-10">
-    {{ memo.text }}
-    <button type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';">Delete
-    </button>
-    <br>
-    =======================================
-    <br>
-  </div>
-  </div> <!-- row -->
-  </div> <!-- memo -->
-  {% endfor %}
-{% else %}
-  <p>No memos for you. </p>  
-{% endif %}
 
-<button type="button" onclick="window.location.href='{{ url_for( 'new' ) }}';">New Memo</button>
+<form name="myForm" onsubmit="return validateForm()">
+
+  <input type="text" name="date" placeholder="Date"><br>
+  <input type="text" name="description" placeholder="Memo Description"><br>
+  <input type="submit" value="Submit">
+  <button type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';">Cancel</button>
+
+</form>
 
 </div> <!-- container -->
 </body>

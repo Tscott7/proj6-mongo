@@ -80,13 +80,17 @@ def index():
       app.logger.debug("Memo: " + str(memo))
   return flask.render_template('index.html')
 
-
-# We don't have an interface for creating memos yet
-# @app.route("/create")
-# def create():
-#     app.logger.debug("Create")
-#     return flask.render_template('create.html')
-
+@app.route("/new")
+def new():
+  app.logger.debug("New Memo")
+  try:
+      x = flask.request.args.get("date", type=str)
+      y = flask.request.args.get("description", type=str)
+      app.logger.debug("x = " + x + " y = " + y)
+      db.memos.insert({'text' : str(y), 'date' : str(x)})
+  except:
+      app.logger.debug("No date or description")
+  return flask.render_template('new.html')
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -135,8 +139,8 @@ def get_memos():
     can be inserted directly in the 'session' object.
     """
     records = [ ]
-    for record in collection.find( { "type": "dated_memo" } ):
-        record['date'] = arrow.get(record['date']).isoformat()
+    for record in db.memos.find():
+        print("record = " + str(record))
         del record['_id']
         records.append(record)
     return records 

@@ -7,25 +7,25 @@ import pymongo
 from pymongo import MongoClient
 import sys
 
-import secrets.admin_secrets
-import secrets.client_secrets
+import config
+CONFIG = config.configuration()
 
-MONGO_ADMIN_URL = "mongodb://{}:{}@{}:{}/admin".format(
-    secrets.admin_secrets.admin_user,
-    secrets.admin_secrets.admin_pw,
-    secrets.admin_secrets.host, 
-    secrets.admin_secrets.port)
+MONGO_ADMIN_URL = "mongodb://{}:{}@{}:{}/proj6-mongo".format(
+    CONFIG.DB_USER,
+    CONFIG.DB_USER_PW,
+    CONFIG.DB_HOST, 
+    CONFIG.DB_PORT)
 
 try: 
     dbclient = MongoClient(MONGO_ADMIN_URL)
-    db = getattr(dbclient, secrets.client_secrets.db)
+    db = getattr(dbclient, CONFIG.DB)
     print("Got database")
     print("Attempting drop users")
     # db.command( {"dropAllUsersFromDatabase": 1 } )
-    db.remove_user(secrets.client_secrets.db_user)
-    print("Dropped database users for {}".format(secrets.client_secrets.db))
+    db.remove_user(CONFIG.DB_USER)
+    print("Dropped database users for {}".format(CONFIG.DB_USER))
     db.command( {"dropDatabase": 1 } )
-    print("Dropped database {}".format(secrets.client_secrets.db))
+    print("Dropped database {}".format(CONFIG.DB))
 except Exception as err:
     print("Failed")
     print(err)
